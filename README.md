@@ -15,23 +15,17 @@
 
 ## Installation
 
-### Building from Source
+### From homebrew
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/memoru.git
-   cd memoru
-   ```
+```bash
+brew install kohbis/memoru/memoru
+```
 
-2. Build the project:
-   ```
-   cargo build --release
-   ```
+### From Crates.io
 
-3. Install the binary (optional):
-   ```
-   cargo install --path .
-   ```
+```bash
+cargo install memoru
+```
 
 ## Usage
 
