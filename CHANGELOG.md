@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.3](https://github.com/kohbis/memoru/compare/v0.1.2...v0.1.3) (2025-06-15)
+
+
+### Features
+
+* 🎸 Add Interactive mode if no subcommand ([7003210](https://github.com/kohbis/memoru/commit/70032103c9ee6d598c65b5a9aec9c44050d3d5d6))
+
+
+### Documentation
+
+* ✏️ update readme ([d330b65](https://github.com/kohbis/memoru/commit/d330b65a3371f31ab5958b38ce335d63d71e4e9e))
+
 ## [0.1.2](https://github.com/kohbis/memoru/compare/v0.1.1...v0.1.2) (2025-06-01)
 
 
