@@ -1,14 +1,49 @@
-use chrono::Local;
 use clap::{Parser, Subcommand};
-use rusqlite::{Connection, Result};
+use rusqlite::Connection;
+use std::error::Error;
+use std::fmt;
 use std::fs;
+use std::io;
 use std::path::PathBuf;
+
+mod command;
+
+#[derive(Debug)]
+enum AppError {
+    Sqlite(rusqlite::Error),
+    Io(io::Error),
+}
+
+impl fmt::Display for AppError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            AppError::Sqlite(e) => write!(f, "Database error: {}", e),
+            AppError::Io(e) => write!(f, "IO error: {}", e),
+        }
+    }
+}
+
+impl Error for AppError {}
+
+impl From<rusqlite::Error> for AppError {
+    fn from(err: rusqlite::Error) -> AppError {
+        AppError::Sqlite(err)
+    }
+}
+
+impl From<io::Error> for AppError {
+    fn from(err: io::Error) -> AppError {
+        AppError::Io(err)
+    }
+}
+
+type Result<T> = std::result::Result<T, AppError>;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
     #[command(subcommand)]
-    command: Commands,
+    command: Option<Commands>,
 }
 
 #[derive(Subcommand)]
@@ -68,21 +103,26 @@ fn main() -> Result<()> {
 
     let cli = Cli::parse();
 
-    match &cli.command {
-        Commands::Add { content } => {
-            add_memo(&conn, content)?;
-        }
-        Commands::List => {
-            list_memos(&conn)?;
-        }
-        Commands::View { id } => {
-            view_memo(&conn, *id)?;
-        }
-        Commands::Update { id, content } => {
-            update_memo(&conn, *id, content)?;
-        }
-        Commands::Delete { id } => {
-            delete_memo(&conn, *id)?;
+    match cli.command {
+        Some(command) => match command {
+            Commands::Add { content } => {
+                command::add_memo(&conn, &content)?;
+            }
+            Commands::List => {
+                command::list_memos(&conn)?;
+            }
+            Commands::View { id } => {
+                command::view_memo(&conn, id)?;
+            }
+            Commands::Update { id, content } => {
+                command::update_memo(&conn, id, &content)?;
+            }
+            Commands::Delete { id } => {
+                command::delete_memo(&conn, id)?;
+            }
+        },
+        None => {
+            command::interactive_mode(&conn)?;
         }
     }
 
@@ -92,100 +132,4 @@ fn main() -> Result<()> {
 fn get_data_dir() -> PathBuf {
     let home = dirs::home_dir().expect("Could not find home directory");
     home.join(".memoru")
-}
-
-fn add_memo(conn: &Connection, content: &str) -> Result<()> {
-    let now = Local::now().to_rfc3339();
-
-    conn.execute(
-        "INSERT INTO memos (content, created_at) VALUES (?1, ?2)",
-        [content, &now],
-    )?;
-
-    println!("Memo added successfully!");
-    Ok(())
-}
-
-fn list_memos(conn: &Connection) -> Result<()> {
-    let mut stmt = conn.prepare("SELECT id, content, created_at FROM memos ORDER BY id DESC")?;
-    let memo_iter = stmt.query_map([], |row| {
-        Ok((
-            row.get::<_, i64>(0)?,
-            row.get::<_, String>(1)?,
-            row.get::<_, String>(2)?,
-        ))
-    })?;
-
-    println!("ID | Content | Created At");
-    println!("------------------------");
-
-    for memo in memo_iter {
-        let (id, content, created_at) = memo?;
-        let preview = if content.len() > 30 {
-            format!("{}...", &content[..27])
-        } else {
-            content
-        };
-        println!("{} | {} | {}", id, preview, created_at);
-    }
-
-    Ok(())
-}
-
-fn view_memo(conn: &Connection, id: i64) -> Result<()> {
-    let mut stmt =
-        conn.prepare("SELECT id, content, created_at, updated_at FROM memos WHERE id = ?1")?;
-    let memo = stmt.query_row([id], |row| {
-        Ok((
-            row.get::<_, i64>(0)?,
-            row.get::<_, String>(1)?,
-            row.get::<_, String>(2)?,
-            row.get::<_, Option<String>>(3)?,
-        ))
-    });
-
-    match memo {
-        Ok((id, content, created_at, updated_at)) => {
-            println!("ID: {}", id);
-            println!("Content: {}", content);
-            println!("Created At: {}", created_at);
-            if let Some(updated) = updated_at {
-                println!("Updated At: {}", updated);
-            }
-        }
-        Err(_) => {
-            println!("Memo with ID {} not found", id);
-        }
-    }
-
-    Ok(())
-}
-
-fn update_memo(conn: &Connection, id: i64, content: &str) -> Result<()> {
-    let now = Local::now().to_rfc3339();
-
-    let rows_affected = conn.execute(
-        "UPDATE memos SET content = ?1, updated_at = ?2 WHERE id = ?3",
-        [content, &now, &id.to_string()],
-    )?;
-
-    if rows_affected > 0 {
-        println!("Memo updated successfully!");
-    } else {
-        println!("Memo with ID {} not found", id);
-    }
-
-    Ok(())
-}
-
-fn delete_memo(conn: &Connection, id: i64) -> Result<()> {
-    let rows_affected = conn.execute("DELETE FROM memos WHERE id = ?1", [id])?;
-
-    if rows_affected > 0 {
-        println!("Memo deleted successfully!");
-    } else {
-        println!("Memo with ID {} not found", id);
-    }
-
-    Ok(())
 }
