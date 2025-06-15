@@ -2,7 +2,7 @@
 
 `Memoru` is a simple CLI memo application built with Rust and SQLite3. It allows you to create, read, update, and delete memos from the command line.
 
-“Memo-ru” means “to make a memo” or “to take notes” in Japanese.
+"Memo-ru" means "to make a memo" or "to take notes" in Japanese.
 
 ## Features
 
@@ -12,6 +12,7 @@
 - Update existing memos
 - Delete memos
 - Automatic timestamp tracking (creation and update times)
+- Interactive mode for menu-driven operation
 
 ## Installation
 
@@ -29,7 +30,31 @@ cargo install memoru
 
 ## Usage
 
-### Basic Commands
+### Interactive Mode
+
+Run `memoru` without any arguments to enter interactive mode:
+
+```bash
+memoru
+```
+
+This will display a menu-driven interface:
+
+```
+=== Memoru Interactive Mode ===
+1. Add new memo
+2. List all memos
+3. View a memo
+4. Update a memo
+5. Delete a memo
+6. Exit
+
+Select an option (1-6):
+```
+
+The interactive mode is perfect for users who prefer a guided, menu-driven approach to managing their memos.
+
+### Command-Line Mode
 
 - **Add a memo**:
   ```
