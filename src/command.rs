@@ -1,5 +1,6 @@
 use crate::Result;
 use chrono::Local;
+use comfy_table::{presets::UTF8_FULL, Attribute, Cell, ContentArrangement, Table};
 use rusqlite::Connection;
 
 pub fn add_memo(conn: &Connection, content: &str) -> Result<()> {
@@ -24,8 +25,15 @@ pub fn list_memos(conn: &Connection) -> Result<()> {
         ))
     })?;
 
-    println!("ID | Content | Created At");
-    println!("------------------------");
+    let mut table = Table::new();
+    table
+        .load_preset(UTF8_FULL)
+        .set_content_arrangement(ContentArrangement::Dynamic)
+        .set_header(vec![
+            Cell::new("ID").add_attribute(Attribute::Bold),
+            Cell::new("Content").add_attribute(Attribute::Bold),
+            Cell::new("Created At").add_attribute(Attribute::Bold),
+        ]);
 
     for memo in memo_iter {
         let (id, content, created_at) = memo?;
@@ -34,8 +42,10 @@ pub fn list_memos(conn: &Connection) -> Result<()> {
         } else {
             content
         };
-        println!("{} | {} | {}", id, preview, created_at);
+        table.add_row(vec![id.to_string(), preview, created_at]);
     }
+
+    println!("{table}");
 
     Ok(())
 }
