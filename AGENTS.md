@@ -1,4 +1,4 @@
-# AGENT.md
+# AGENTS.md
 
 This file provides guidance for AI agents working with this codebase.
 
