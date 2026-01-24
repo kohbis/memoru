@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.5](https://github.com/kohbis/memoru/compare/v0.1.4...v0.1.5) (2026-01-24)
+
+
+### Features
+
+* 🎸 Add delete confirmation prompt to memo deletion ([2c1cb72](https://github.com/kohbis/memoru/commit/2c1cb722a61e1803419ea4057088fb14cece8504))
+
+
+### Miscellaneous Chores
+
+* update CHANGELOG with recent features and documentation ([4e01e43](https://github.com/kohbis/memoru/commit/4e01e437b7badc7844e31724ed43e032f48a4383))
+
 ## [0.1.4](https://github.com/kohbis/memoru/compare/v0.1.3...v0.1.4) (2026-01-24)
 
 
