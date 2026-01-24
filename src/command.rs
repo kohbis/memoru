@@ -1,6 +1,6 @@
 use crate::Result;
 use chrono::{DateTime, Local};
-use comfy_table::{presets::UTF8_FULL, Attribute, Cell, ContentArrangement, Table};
+use comfy_table::{Attribute, Cell, ContentArrangement, Table, presets::UTF8_FULL};
 use rusqlite::Connection;
 
 fn format_datetime(datetime_str: &str) -> String {
@@ -22,7 +22,8 @@ pub fn add_memo(conn: &Connection, content: &str) -> Result<()> {
 }
 
 pub fn list_memos(conn: &Connection) -> Result<()> {
-    let mut stmt = conn.prepare("SELECT id, content, created_at, updated_at FROM memos ORDER BY id DESC")?;
+    let mut stmt =
+        conn.prepare("SELECT id, content, created_at, updated_at FROM memos ORDER BY id ASC")?;
     let memo_iter = stmt.query_map([], |row| {
         Ok((
             row.get::<_, i64>(0)?,
@@ -119,32 +120,32 @@ pub fn interactive_mode(conn: &Connection) -> Result<()> {
 
     loop {
         println!("\n=== Memoru Interactive Mode ===");
-        println!("1. Add new memo");
-        println!("2. List all memos");
-        println!("3. View a memo");
-        println!("4. Update a memo");
-        println!("5. Delete a memo");
-        println!("6. Exit");
-        print!("\nSelect an option (1-6): ");
+        println!("[a] Add new memo");
+        println!("[l] List all memos");
+        println!("[v] View a memo");
+        println!("[u] Update a memo");
+        println!("[d] Delete a memo");
+        println!("[q] Quit");
+        print!("\nSelect an option (or enter ID to view): ");
         io::stdout().flush()?;
 
         let mut choice = String::new();
         io::stdin().read_line(&mut choice)?;
-        let choice = choice.trim();
+        let choice = choice.trim().to_lowercase();
         println!();
 
-        match choice {
-            "1" => {
+        match choice.as_str() {
+            "a" => {
                 print!("Enter memo content: ");
                 io::stdout().flush()?;
                 let mut content = String::new();
                 io::stdin().read_line(&mut content)?;
                 add_memo(conn, content.trim())?;
             }
-            "2" => {
+            "l" => {
                 list_memos(conn)?;
             }
-            "3" => {
+            "v" => {
                 print!("Enter memo ID: ");
                 io::stdout().flush()?;
                 let mut id_str = String::new();
@@ -155,7 +156,7 @@ pub fn interactive_mode(conn: &Connection) -> Result<()> {
                     println!("Invalid ID format");
                 }
             }
-            "4" => {
+            "u" => {
                 print!("Enter memo ID: ");
                 io::stdout().flush()?;
                 let mut id_str = String::new();
@@ -172,7 +173,7 @@ pub fn interactive_mode(conn: &Connection) -> Result<()> {
                     println!("Invalid ID format");
                 }
             }
-            "5" => {
+            "d" => {
                 print!("Enter memo ID: ");
                 io::stdout().flush()?;
                 let mut id_str = String::new();
@@ -183,12 +184,16 @@ pub fn interactive_mode(conn: &Connection) -> Result<()> {
                     println!("Invalid ID format");
                 }
             }
-            "6" => {
+            "q" => {
                 println!("Goodbye!");
                 break;
             }
             _ => {
-                println!("Invalid option. Please try again.");
+                if let Ok(id) = choice.parse::<i64>() {
+                    view_memo(conn, id)?;
+                } else {
+                    println!("Invalid option. Please try again.");
+                }
             }
         }
     }
