@@ -103,7 +103,24 @@ pub fn update_memo(conn: &Connection, id: i64, content: &str) -> Result<()> {
     Ok(())
 }
 
+fn confirm_delete(id: i64) -> Result<bool> {
+    use std::io::{self, Write};
+
+    print!("Are you sure you want to delete memo {}? [y/N]: ", id);
+    io::stdout().flush()?;
+
+    let mut response = String::new();
+    io::stdin().read_line(&mut response)?;
+
+    Ok(response.trim().eq_ignore_ascii_case("y"))
+}
+
 pub fn delete_memo(conn: &Connection, id: i64) -> Result<()> {
+    if !confirm_delete(id)? {
+        println!("Delete cancelled.");
+        return Ok(());
+    }
+
     let rows_affected = conn.execute("DELETE FROM memos WHERE id = ?1", [id])?;
 
     if rows_affected > 0 {
