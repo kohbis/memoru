@@ -38,19 +38,22 @@ Run `memoru` without any arguments to enter interactive mode:
 memoru
 ```
 
-This will display a menu-driven interface:
+On startup, the list of memos is displayed automatically, followed by a menu-driven interface:
 
 ```
 === Memoru Interactive Mode ===
-1. Add new memo
-2. List all memos
-3. View a memo
-4. Update a memo
-5. Delete a memo
-6. Exit
+[a] Add new memo
+[l] List all memos
+[v] View a memo
+[u] Update a memo
+[d] Delete a memo
+[q] Quit
 
-Select an option (1-6):
+Select an option (or enter ID to view):
 ```
+
+- Use alphabet keys (`a`, `l`, `v`, `u`, `d`, `q`) for menu actions
+- Enter a memo ID directly to quickly view that memo
 
 The interactive mode is perfect for users who prefer a guided, menu-driven approach to managing their memos.
 
