@@ -118,6 +118,9 @@ pub fn delete_memo(conn: &Connection, id: i64) -> Result<()> {
 pub fn interactive_mode(conn: &Connection) -> Result<()> {
     use std::io::{self, Write};
 
+    // Show list on startup
+    list_memos(conn)?;
+
     loop {
         println!("\n=== Memoru Interactive Mode ===");
         println!("[a] Add new memo");
