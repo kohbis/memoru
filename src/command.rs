@@ -1,7 +1,13 @@
 use crate::Result;
-use chrono::Local;
+use chrono::{DateTime, Local};
 use comfy_table::{presets::UTF8_FULL, Attribute, Cell, ContentArrangement, Table};
 use rusqlite::Connection;
+
+fn format_datetime(datetime_str: &str) -> String {
+    DateTime::parse_from_rfc3339(datetime_str)
+        .map(|dt| dt.format("%Y-%m-%d %H:%M:%S").to_string())
+        .unwrap_or_else(|_| datetime_str.to_string())
+}
 
 pub fn add_memo(conn: &Connection, content: &str) -> Result<()> {
     let now = Local::now().to_rfc3339();
@@ -16,12 +22,13 @@ pub fn add_memo(conn: &Connection, content: &str) -> Result<()> {
 }
 
 pub fn list_memos(conn: &Connection) -> Result<()> {
-    let mut stmt = conn.prepare("SELECT id, content, created_at FROM memos ORDER BY id DESC")?;
+    let mut stmt = conn.prepare("SELECT id, content, created_at, updated_at FROM memos ORDER BY id DESC")?;
     let memo_iter = stmt.query_map([], |row| {
         Ok((
             row.get::<_, i64>(0)?,
             row.get::<_, String>(1)?,
             row.get::<_, String>(2)?,
+            row.get::<_, Option<String>>(3)?,
         ))
     })?;
 
@@ -32,17 +39,18 @@ pub fn list_memos(conn: &Connection) -> Result<()> {
         .set_header(vec![
             Cell::new("ID").add_attribute(Attribute::Bold),
             Cell::new("Content").add_attribute(Attribute::Bold),
-            Cell::new("Created At").add_attribute(Attribute::Bold),
+            Cell::new("Timestamp").add_attribute(Attribute::Bold),
         ]);
 
     for memo in memo_iter {
-        let (id, content, created_at) = memo?;
+        let (id, content, created_at, updated_at) = memo?;
         let preview = if content.len() > 30 {
             format!("{}...", &content[..27])
         } else {
             content
         };
-        table.add_row(vec![id.to_string(), preview, created_at]);
+        let timestamp = updated_at.as_ref().unwrap_or(&created_at);
+        table.add_row(vec![id.to_string(), preview, format_datetime(timestamp)]);
     }
 
     println!("{table}");
@@ -65,11 +73,9 @@ pub fn view_memo(conn: &Connection, id: i64) -> Result<()> {
     match memo {
         Ok((id, content, created_at, updated_at)) => {
             println!("ID: {}", id);
+            let timestamp = updated_at.as_ref().unwrap_or(&created_at);
+            println!("Timestamp: {}", format_datetime(timestamp));
             println!("Content: {}", content);
-            println!("Created At: {}", created_at);
-            if let Some(updated) = updated_at {
-                println!("Updated At: {}", updated);
-            }
         }
         Err(_) => {
             println!("Memo with ID {} not found", id);
@@ -125,6 +131,7 @@ pub fn interactive_mode(conn: &Connection) -> Result<()> {
         let mut choice = String::new();
         io::stdin().read_line(&mut choice)?;
         let choice = choice.trim();
+        println!();
 
         match choice {
             "1" => {
