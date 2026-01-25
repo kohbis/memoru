@@ -77,6 +77,12 @@ enum Commands {
         #[arg(required = true)]
         id: i64,
     },
+    /// Search memos by content
+    Search {
+        /// Search pattern (case-insensitive)
+        #[arg(required = true)]
+        pattern: String,
+    },
 }
 
 fn main() -> Result<()> {
@@ -119,6 +125,9 @@ fn main() -> Result<()> {
             }
             Commands::Delete { id } => {
                 command::delete_memo(&conn, id)?;
+            }
+            Commands::Search { pattern } => {
+                command::search_memos(&conn, &pattern)?;
             }
         },
         None => {

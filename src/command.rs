@@ -59,6 +59,53 @@ pub fn list_memos(conn: &Connection) -> Result<()> {
     Ok(())
 }
 
+pub fn search_memos(conn: &Connection, pattern: &str) -> Result<()> {
+    let search_pattern = format!("%{}%", pattern);
+    let mut stmt = conn.prepare(
+        "SELECT id, content, created_at, updated_at FROM memos WHERE content LIKE ?1 ORDER BY id ASC",
+    )?;
+    let memo_iter = stmt.query_map([&search_pattern], |row| {
+        Ok((
+            row.get::<_, i64>(0)?,
+            row.get::<_, String>(1)?,
+            row.get::<_, String>(2)?,
+            row.get::<_, Option<String>>(3)?,
+        ))
+    })?;
+
+    let mut table = Table::new();
+    table
+        .load_preset(UTF8_FULL)
+        .set_content_arrangement(ContentArrangement::Dynamic)
+        .set_header(vec![
+            Cell::new("ID").add_attribute(Attribute::Bold),
+            Cell::new("Content").add_attribute(Attribute::Bold),
+            Cell::new("Timestamp").add_attribute(Attribute::Bold),
+        ]);
+
+    let mut count = 0;
+    for memo in memo_iter {
+        let (id, content, created_at, updated_at) = memo?;
+        let preview = if content.len() > 30 {
+            format!("{}...", &content[..27])
+        } else {
+            content
+        };
+        let timestamp = updated_at.as_ref().unwrap_or(&created_at);
+        table.add_row(vec![id.to_string(), preview, format_datetime(timestamp)]);
+        count += 1;
+    }
+
+    if count == 0 {
+        println!("No memos found matching '{}'", pattern);
+    } else {
+        println!("{table}");
+        println!("Found {} memo(s) matching '{}'", count, pattern);
+    }
+
+    Ok(())
+}
+
 pub fn view_memo(conn: &Connection, id: i64) -> Result<()> {
     let mut stmt =
         conn.prepare("SELECT id, content, created_at, updated_at FROM memos WHERE id = ?1")?;
@@ -142,6 +189,7 @@ pub fn interactive_mode(conn: &Connection) -> Result<()> {
         println!("\n=== Memoru Interactive Mode ===");
         println!("[a] Add new memo");
         println!("[l] List all memos");
+        println!("[s] Search memos");
         println!("[v] View a memo");
         println!("[u] Update a memo");
         println!("[d] Delete a memo");
@@ -164,6 +212,13 @@ pub fn interactive_mode(conn: &Connection) -> Result<()> {
             }
             "l" => {
                 list_memos(conn)?;
+            }
+            "s" => {
+                print!("Enter search pattern: ");
+                io::stdout().flush()?;
+                let mut pattern = String::new();
+                io::stdin().read_line(&mut pattern)?;
+                search_memos(conn, pattern.trim())?;
             }
             "v" => {
                 print!("Enter memo ID: ");
