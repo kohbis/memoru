@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.6](https://github.com/kohbis/memoru/compare/v0.1.5...v0.1.6) (2026-01-25)
+
+
+### Features
+
+* 🎸 Add memo search functionality with both CLI and interactive mode support ([c9da101](https://github.com/kohbis/memoru/commit/c9da1018e86262615fa687b8d386ce75a541b58d))
+
+
+### Documentation
+
+* ✏️ Update README, AGENTS.md ([7ae1848](https://github.com/kohbis/memoru/commit/7ae1848264e86be33b9484146a51d61c195f5b3c))
+
 ## [0.1.5](https://github.com/kohbis/memoru/compare/v0.1.4...v0.1.5) (2026-01-24)
 
 
