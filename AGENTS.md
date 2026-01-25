@@ -37,6 +37,7 @@ memoru/
 ### command.rs
 - `add_memo()` - Create a new memo
 - `list_memos()` - Display all memos in a table (ordered by ID ASC)
+- `search_memos()` - Search memos by content using LIKE pattern matching
 - `view_memo()` - Display a single memo in table format
 - `update_memo()` - Modify existing memo content
 - `delete_memo()` - Remove a memo
@@ -46,7 +47,7 @@ memoru/
 
 When run without arguments, memoru enters interactive mode:
 - Shows memo list on startup
-- Menu options use alphabet keys: `a` (add), `l` (list), `v` (view), `u` (update), `d` (delete), `q` (quit)
+- Menu options use alphabet keys: `a` (add), `l` (list), `s` (search), `v` (view), `u` (update), `d` (delete), `q` (quit)
 - Entering a number directly views that memo ID
 
 ## Database Schema
@@ -74,6 +75,7 @@ cargo run
 # Run with subcommand
 cargo run -- add "memo content"
 cargo run -- list
+cargo run -- search "keyword"
 cargo run -- view 1
 cargo run -- update 1 "new content"
 cargo run -- delete 1
