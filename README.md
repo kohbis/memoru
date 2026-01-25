@@ -8,6 +8,7 @@
 
 - Add new memos
 - List all memos
+- Search memos by content
 - View a specific memo
 - Update existing memos
 - Delete memos
@@ -44,6 +45,7 @@ On startup, the list of memos is displayed automatically, followed by a menu-dri
 === Memoru Interactive Mode ===
 [a] Add new memo
 [l] List all memos
+[s] Search memos
 [v] View a memo
 [u] Update a memo
 [d] Delete a memo
@@ -52,7 +54,7 @@ On startup, the list of memos is displayed automatically, followed by a menu-dri
 Select an option (or enter ID to view):
 ```
 
-- Use alphabet keys (`a`, `l`, `v`, `u`, `d`, `q`) for menu actions
+- Use alphabet keys (`a`, `l`, `s`, `v`, `u`, `d`, `q`) for menu actions
 - Enter a memo ID directly to quickly view that memo
 
 The interactive mode is perfect for users who prefer a guided, menu-driven approach to managing their memos.
@@ -84,6 +86,11 @@ The interactive mode is perfect for users who prefer a guided, menu-driven appro
   memoru delete <memo_id>
   ```
 
+- **Search memos by content**:
+  ```
+  memoru search <pattern>
+  ```
+
 - **Get help**:
   ```
   memoru --help
@@ -106,6 +113,9 @@ memoru update 1 "Buy groceries: milk, eggs, bread, cheese"
 
 # Delete memo with ID 1
 memoru delete 1
+
+# Search for memos containing "groceries"
+memoru search groceries
 ```
 
 ## Data Storage
