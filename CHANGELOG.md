@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.7](https://github.com/kohbis/memoru/compare/v0.1.6...v0.1.7) (2026-03-31)
+
+
+### Build System
+
+* **deps:** bump chrono from 0.4.43 to 0.4.44 ([2181e84](https://github.com/kohbis/memoru/commit/2181e8453ca98b7fd5ed0b4a3ff9431718509fcf))
+* **deps:** bump clap from 4.5.54 to 4.5.55 ([720910a](https://github.com/kohbis/memoru/commit/720910add84a289daf32e1a08029078d93b7379d))
+* **deps:** bump clap from 4.5.55 to 4.5.56 ([1286bf7](https://github.com/kohbis/memoru/commit/1286bf7979ca097eaef5a2a1778faedf6754360a))
+* **deps:** bump clap from 4.5.56 to 4.5.57 ([12775f3](https://github.com/kohbis/memoru/commit/12775f3d6bb96bb2c25f7c9f30cd35a6e8434e9a))
+* **deps:** bump clap from 4.5.57 to 4.5.58 ([2b6d0d9](https://github.com/kohbis/memoru/commit/2b6d0d9eed995119a3905da2ee9197bf132f3121))
+* **deps:** bump clap from 4.5.58 to 4.5.59 ([3df606a](https://github.com/kohbis/memoru/commit/3df606aa86813919af77941e011892162749c08a))
+* **deps:** bump clap from 4.5.59 to 4.5.60 ([493d89f](https://github.com/kohbis/memoru/commit/493d89f1c6cd4bc063542efc2a9ebd44f16a3559))
+* **deps:** bump clap from 4.5.60 to 4.6.0 ([635cd87](https://github.com/kohbis/memoru/commit/635cd87f43837147bf42bdf824bf491d66b14eef))
+
 ## [0.1.6](https://github.com/kohbis/memoru/compare/v0.1.5...v0.1.6) (2026-01-25)
 
 
