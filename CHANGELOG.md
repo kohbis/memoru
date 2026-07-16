@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.8](https://github.com/kohbis/memoru/compare/v0.1.7...v0.1.8) (2026-07-16)
+
+
+### Build System
+
+* **deps:** bump clap from 4.6.0 to 4.6.1 ([d9bac62](https://github.com/kohbis/memoru/commit/d9bac624d9e826195f44e5d7f5e90ab3319d05ff))
+* **deps:** bump clap from 4.6.1 to 4.6.2 ([52b6940](https://github.com/kohbis/memoru/commit/52b6940bda408cd69ab51d18a98063d983994382))
+
 ## [0.1.7](https://github.com/kohbis/memoru/compare/v0.1.6...v0.1.7) (2026-07-01)
 
 
