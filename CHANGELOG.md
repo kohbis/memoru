@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.1.9](https://github.com/kohbis/memoru/compare/v0.1.8...v0.1.9) (2026-11-20)
+
+
+### Bug Fixes
+
+* migrate comfy-table calls to load_style ([c70736f](https://github.com/kohbis/memoru/commit/c70736f2bf645656f669938114ff6d664a5111c2))
+
+
+### Miscellaneous Chores
+
+* pin GitHub Actions to commit SHAs ([e84b850](https://github.com/kohbis/memoru/commit/e84b850103934085c062ab23b875509b5ce901de))
+
+
+### Build System
+
+* **deps:** bump clap from 4.6.2 to 4.6.4 ([5f39434](https://github.com/kohbis/memoru/commit/5f394343622cceef2a13368d3c7db70c5123f179))
+* **deps:** bump clap from 4.6.4 to 4.6.7 ([ce079b0](https://github.com/kohbis/memoru/commit/ce079b0f210c4c828c9f8b4724726a35c64af1fd))
+* **deps:** bump clap from 4.6.7 to 4.6.8 ([248d101](https://github.com/kohbis/memoru/commit/248d1016b8e3a7a36d9a280bdc799ce6d4e1bba7))
+* **deps:** bump comfy-table from 7.2.2 to 8.0.1 ([3aeccce](https://github.com/kohbis/memoru/commit/3aecccea9e4eecdfa0b0a76c1e524583c3ba7334))
+* **deps:** bump dirs from 6.0.0 to 7.0.0 ([73900fa](https://github.com/kohbis/memoru/commit/73900facf349dfcafd7ea470059f731ffa7d2b9d))
+
 ## [0.1.8](https://github.com/kohbis/memoru/compare/v0.1.7...v0.1.8) (2026-07-16)
 
 
